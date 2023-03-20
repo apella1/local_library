@@ -1,13 +1,38 @@
 const BookInstance = require("../models/bookInstance");
 
 // displaying all book instances
-exports.bookInstanceList = (req, res) => {
-  res.send("Book instances Display: not implemented");
+exports.bookInstanceList = (req, res, next) => {
+  BookInstance.find()
+    .populate("book")
+    .exec(function (err, listBookInstances) {
+      if (err) {
+        return next(err);
+      }
+      res.render("bookInstanceList", {
+        title: "Book Instance List",
+        bookInstanceList: listBookInstances,
+      });
+    });
 };
 
-// displaying a single book isntance
-exports.bookInstanceDetail = (req, res) => {
-  res.send("Book instance details: not implemented");
+// displaying a single book instance
+exports.bookInstanceDetail = (req, res, next) => {
+  BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec((err, bookInstance) => {
+      if (err) {
+        return next(err);
+      }
+      if (bookInstance == null) {
+        const err = new Error("Book instance not found");
+        err.status = 404;
+        return next(err);
+      }
+      res.render("bookInstanceDetail", {
+        title: `Copy: ${bookInstance.book.title}`,
+        bookInstance,
+      });
+    });
 };
 
 // display book instance create form
