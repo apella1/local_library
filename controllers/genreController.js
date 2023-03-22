@@ -52,25 +52,25 @@ exports.genreDetail = (req, res, next) => {
 
 // display genre create form
 exports.genreCreateGet = (req, res, next) => {
-  res.render("genreForm", { category: "Create Genre" });
+  res.render("genreForm", { title: "Create Genre" });
 };
 
 // handling genre creation post
 exports.genreCreatePost = [
   // validating and sanitizing data
-  body("name", "Genre name is required").trim().isLength({ min: 3 }).escape(),
+  body("category", "Genre category is required").trim().isLength({ min: 3 }).escape(),
 
   // processing the request after validation and sanitization
   (req, res, next) => {
     const errors = validationResult(req);
 
     // creating a genre object with escaped and trimmed data
-    const genre = new Genre({ name: req.body.name });
+    const genre = new Genre({ category: req.body.category });
 
-    // redisplaying the form if there are errors
+    // re-displaying the form if there are errors
     if (!errors.isEmpty()) {
       res.render("genreForm", {
-        category: "Create Genre",
+        title: "Create Genre",
         genre,
         errors: errors.array(),
       });
@@ -78,7 +78,7 @@ exports.genreCreatePost = [
     } else {
       // data is valid
       // check a genre with the same name exists
-      Genre.findOne({ name: req.body.name }).exec((err, foundGenre) => {
+      Genre.findOne({ category: req.body.category }).exec((err, foundGenre) => {
         if (err) {
           return next(err);
         }

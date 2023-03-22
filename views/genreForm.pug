@@ -1,16 +1,16 @@
 extends layout
 
 block content
-  h1 #{category}
+  h1(class="text-4xl") #{title}
 
-  form(method='POST' action='')
-    div.form-group
-      label(for='name') Genre:
-      input#name.form-control(type='text', placeholder='Fantasy, Poetry etc.' name='name' value=(undefined===genre ? '' : genre.name))
-    button.btn.btn-primary(type='submit') Submit
+  form(method='POST' action='' class="flex flex-col p-8 m-4 space-y-4")
+    div(class="flex space-x-4 items-center")
+      label(for='name' class="text-xl font-medium") Genre:
+      input(type='text' class="p-2 rounded-md border w-full border-gray-700" id="name" placeholder='Fantasy, Poetry etc.' name='category' value=(undefined===genre ? '' : genre.category))
+    button(type='submit' class="text-white bg-blue-800 px-2 py-4 rounded-md hover:bg-blue-500") Submit
 
   if errors
-   ul
+   ul(class="list-none p-2")
     for error in errors
      li!= error.msg
 
