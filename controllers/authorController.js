@@ -2,6 +2,7 @@ const Author = require("../models/author");
 const Book = require("../models/book");
 
 const async = require("async");
+const { body, validationResult } = require("express-validator");
 
 // display page for specific author
 exports.authorDetail = (req, res, next) => {
@@ -48,14 +49,55 @@ exports.authorList = (req, res, next) => {
 };
 
 // display author create form on get
-exports.authorCreateGet = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author create get");
+exports.authorCreateGet = (req, res, next) => {
+  res.render("authorForm", { title: "Create Author" });
 };
 
 // handle author create on post
-exports.authorCreatePost = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author create post");
-};
+exports.authorCreatePost = [
+  body("firstName")
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .withMessage("First name is required"),
+  body("lastName")
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .withMessage("Last name is required"),
+  body("dateOfBirth", "Invalid date of birth")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("dateOfDeath", "Invalid date of death")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.render("authorForm", {
+        title: "Create Author",
+        author: req.body,
+        errors: errors.array(),
+      });
+    } else {
+      const author = new Author({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        dateOfBirth: req.body.dateOfBirth,
+        dateOfDeath: req.body.dateOfDeath,
+      });
+      author.save((err) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect(author.url);
+      });
+    }
+  },
+];
 
 // display author delete form on get
 exports.authorDeleteGet = (req, res) => {

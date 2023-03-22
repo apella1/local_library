@@ -23,7 +23,7 @@ const AuthorSchema = new Schema({
 
 AuthorSchema.virtual("name").get(function () {
   if (this.firstName && this.lastName) {
-    fullName = `${this.firstName}, ${this.lastName}`;
+    fullName = `${this.firstName} ${this.lastName}`;
   }
   if (!this.firstName || !this.lastName) {
     fullName = ``;
