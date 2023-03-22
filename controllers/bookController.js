@@ -4,6 +4,7 @@ const Genre = require("../models/genre");
 const BookInstance = require("../models/bookInstance");
 
 const async = require("async");
+const { body, validationResult } = require("express-validator");
 
 // displaying homepage
 exports.index = (req, res) => {
@@ -81,14 +82,109 @@ exports.bookDetail = (req, res, next) => {
 };
 
 // display book create form
-exports.bookCreateGet = (req, res) => {
-  res.send("Book Creation: not implemented");
+exports.bookCreateGet = (req, res, next) => {
+  async.parallel(
+    {
+      authors(callback) {
+        Author.find(callback);
+      },
+      genres(callback) {
+        Genre.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.render("bookForm", {
+        title: "Create Book",
+        authors: results.authors,
+        genres: results.genres,
+      });
+    }
+  );
 };
 
 // handling book creation post
-exports.bookCreatePost = (req, res) => {
-  res.send("Book creation post: not implemented");
-};
+exports.bookCreatePost = [
+  // converting the genre into an array
+  (req, res, next) => {
+    if (!Array.isArray(req.body.genre)) {
+      req.body.genre =
+        typeof req.body.genre === undefined ? [] : [req.body.genre];
+    }
+    next();
+  },
+
+  // sanitizing data
+  body("title", "Title must not be empty").trim().isLength({ min: 3 }).escape(),
+  body("author", "Author must not be empty")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("summary", "Summary must not be empty")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("isbn", "ISBN must not be empty").trim().isLength({ min: 3 }).escape(),
+  // using a wildcard to individually validate each of the genre array entries
+  body("genre.*").escape(),
+
+  // request processing after validation and sanitizing
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const book = new Book({
+      title: req.body.title,
+      author: req.body.author,
+      summary: req.body.summary,
+      isbn: req.body.isbn,
+      genre: req.body.genre,
+    });
+
+    if (!errors.isEmpty()) {
+      async.parallel(
+        // getting the authors and genres
+        {
+          authors(callback) {
+            Author.find(callback);
+          },
+          genres(callback) {
+            Genre.find(callback);
+          },
+        },
+        // re-displaying the form with sanitized data
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+          // marking the selected genres as checked
+          for (const genre of results.genres) {
+            if (book.genre.includes(genre._id)) {
+              genre.checked = "true";
+            }
+          }
+          res.render("bookForm", {
+            title: "Create Book",
+            authors: results.authors,
+            genres: results.genres,
+            book,
+            errors: errors.array(),
+          });
+          return;
+        }
+      );
+    }
+
+    // saving valid data
+    book.save((err) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(book.url);
+    });
+  },
+];
 
 // display book update get
 exports.bookUpdateGet = (req, res) => {

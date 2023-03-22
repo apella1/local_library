@@ -11,7 +11,7 @@ const BookSchema = new Schema({
 });
 
 // virtual url field
-// todo binding of this keyword in function definitions vs arrow fucntions
+// todo binding of this keyword in function definitions vs arrow functions
 
 BookSchema.virtual("url").get(function () {
   return `catalog/book/${this._id}`;
