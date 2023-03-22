@@ -1,5 +1,7 @@
 const BookInstance = require("../models/bookInstance");
+const Book = require("../models/book");
 
+const { body, validationResult } = require("express-validator");
 // displaying all book instances
 exports.bookInstanceList = (req, res, next) => {
   BookInstance.find()
@@ -37,13 +39,63 @@ exports.bookInstanceDetail = (req, res, next) => {
 
 // display book instance create form
 exports.bookInstanceCreateGet = (req, res) => {
-  res.send("Book instance Creation: not implemented");
+  Book.find({}, "title").exec((err, books) => {
+    if (err) {
+      return next(err);
+    }
+    res.render("bookInstanceForm", {
+      title: "Create Book Instance",
+      bookList: books,
+    });
+  });
 };
 
 // handling book  instance creation post
-exports.bookInstanceCreatePost = (req, res) => {
-  res.send("Book instance creation post: not implemented");
-};
+exports.bookInstanceCreatePost = [
+  body("book", "Book is required").trim().isLength({ min: 3 }).escape(),
+  body("imprint", "Imprint is required").trim().isLength({ min: 3 }).escape(),
+  body("status", "Status is required").escape(),
+  body("dueBack", "Invalid date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const bookInstance = new BookInstance({
+      book: req.body.book,
+      imprint: req.body.imprint,
+      status: req.body.status,
+      dueBack: req.body.dueBack,
+    });
+
+    if (!errors.isEmpty()) {
+      Book.find({}, "title").exec((err, books) => {
+        if (err) {
+          return next(err);
+        }
+        res.render("bookInstanceForm", {
+          title: "Create Book Instance",
+          bookList: books,
+          selectedBook: bookInstance.book._id,
+          errors: errors.array(),
+          bookInstance,
+        });
+      });
+      return;
+    }
+
+    // processing valid data
+    bookInstance.save((err) => {
+      if (err) {
+        return next(err);
+      }
+
+      res.redirect(bookInstance.url);
+    });
+  },
+];
 
 // display book instance update get
 exports.bookInstanceUpdateGet = (req, res) => {

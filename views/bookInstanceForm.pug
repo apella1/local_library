@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold")=title
+
+  form(method='POST' action='' class="flex flex-col p-8 m-4 space-y-4")
+    div(class="flex p-4 space-x-2")
+      label(for='book' class="text-xl font-medium") Book:
+      select#book(type='select' placeholder='Select book' class="border border-gray-700 rounded-md p-2 w-full" name='book' required='true') - bookList.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+        for book in bookList
+          option(value=book._id, selected=(selectedBook==book._id.toString() ? 'selected' : false) ) #{book.title}
+
+    div(class="flex p-4 space-x-2")
+      label(for='imprint' class="text-xl font-medium") Imprint:
+      input#imprint(type='text' placeholder='Publisher and date information' class="border border-gray-700 rounded-md p-2 w-full" name='imprint' required='true' value=(undefined===bookInstance ? '' : bookInstance.imprint))
+    div(class="flex flex-col p-4 space-y-2")
+      label(for='dueBack' class="text-xl font-medium") Date when book available:
+      input#dueBack(type='date' name='dueBack' class="border border-gray-700 rounded-md p-2 w-full" value=(undefined===bookInstance ? '' : bookInstance.dueBack))
+
+    div(class="flex p-4 space-x-2")
+      label(for='status' class="text-xl font-medium") Status:
+      select#status.form-control(type='select' class="border border-gray-700 rounded-md p-2 w-full" placeholder='Select status' name='status' required='true')
+        option(value='Maintenance') Maintenance
+        option(value='Available') Available
+        option(value='Loaned') Loaned
+        option(value='Reserved') Reserved
+
+    button(type='submit' class="text-white bg-blue-800 px-2 py-4 rounded-lg hover:bg-blue-500") Submit
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
