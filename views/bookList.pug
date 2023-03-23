@@ -1,14 +1,14 @@
 extends layout
 
 block content
-  h1= title
+  h1(class="font-bold text-4xl py-2")= title
 
-  ul
+  ul(class="list-decimal p-8 mb-4")
     each book in bookList
       li
-        a(href=book.url) #{book.title}
+        a(href=book.url class="text-blue-600 text-lg font-medium") #{book.title}
         |  (#{book.author.name})
 
     else
-      li There are no books.
+      li(class="text-lg") There are no books.
 

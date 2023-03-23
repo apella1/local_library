@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1 Title: #{book.title}
+  h1(class="text-4xl font-bold p-2") Title: #{book.title}
 
   p #[strong Author:]
     a(href=book.author.url) #{book.author.name}
@@ -19,11 +19,11 @@ block content
     each val in bookInstances
       hr
       if val.status=='Available'
-        p.text-success #{val.status}
+        p(class="text-blue-600") #{val.status}
       else if val.status=='Maintenance'
-        p.text-danger #{val.status}
+        p(class="text-orange-600") #{val.status}
       else
-        p.text-warning #{val.status}
+        p(class="text-red-600") #{val.status}
       p #[strong Imprint:] #{val.imprint}
       if val.status!='Available'
         p #[strong Due back:] #{val.due_back}
@@ -31,5 +31,10 @@ block content
         a(href=val.url) #{val._id}
 
     else
-      p There are no copies of this book in the library.
+      p(class="text-lg") There are no copies of this book in the library.
 
+  hr
+  p(class="p-8 flex")
+    a(href=book.url+'/delete' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Delete Book
+  p(class="p-8 flex")
+    a(href=book.url+'/update' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Update Book
