@@ -100,13 +100,65 @@ exports.authorCreatePost = [
 ];
 
 // display author delete form on get
-exports.authorDeleteGet = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author delete form");
+exports.authorDeleteGet = (req, res, next) => {
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.params.id).exec(callback);
+      },
+      authorBooks(callback) {
+        Book.find({ author: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.author == null) {
+        res.redirect(`/catalog/authors`);
+      }
+      res.render("authorDeleteForm", {
+        title: "Delete Author",
+        author: results.author,
+        authorBooks: results.authorBooks,
+      });
+    }
+  );
 };
 
 // handle author delete on post
 exports.authorDeletePost = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author delete post");
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.params.authorId).exec(callback);
+      },
+      authorBooks(callback) {
+        Book.find({ author: req.params.authorId });
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      // checking if author has books
+      if (results.authorBooks.length > 0) {
+        res.render("authorDeleteForm", {
+          title: "Delete Author",
+          author: results.author,
+          authorBooks: results.authorBooks,
+        });
+      }
+
+      Author.findByIdAndRemove(req.params.authorId, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect(`catalog/authors`);
+      });
+    }
+  );
 };
 
 // display author update form on get

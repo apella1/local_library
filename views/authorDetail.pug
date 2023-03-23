@@ -2,19 +2,22 @@ extends layout
 
 block content
 
-  h1 Author: #{author.name}
-  p #{author.dobFormatted} - #{author.dodFormatted}
+  h1(class="text-4xl p-2") Author: #{author.name}
+  p(class="italic mb-4 p-2") #{author.dobFormatted} - #{author.dodFormatted}
 
   div(style='margin-left:20px;margin-top:20px')
 
-    h4 Books
+    h4(class="text-2xl text-blue-700") Books
 
     dl
       each book in authorBooks
         dt
-          a(href=book.url) #{book.title}
-        dd #{book.summary}
+          a(href=book.url class="text-lg text-blue-500 hover:underline") #{book.title}
+        dd(class="text-md font-normal pl-3") #{book.summary}
 
       else
-        p This author has no books.
+        p(class="text-lg") This author has no books.
 
+  hr
+  p(class="p-8 flex")
+    a(href=author.url+'/delete' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Delete author
