@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold") #{title}: #{book.name}
+
+  if bookInstances.length
+
+    p(class="text-lg font-semibold") Delete the following instances before attempting to delete this book.
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4(class="text-2xl text-blue-700") Books
+
+      dl
+      each instance in bookInstances
+        dt(class="p-2")
+          a(href=instance.url class="text-lg text-blue-500 hover:underline") #{instance}
+
+  else
+    p(class="text-lg m-0") Do you really want to delete this book?
+
+    form(method='POST' action='' class="flex flex-col space-y-2")
+      div(class="p-8 m-4")
+        input#bookId.form-control(type='hidden',name='bookId', required='true', value=book._id )
+
+      button(type='submit' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Delete Book

@@ -4,13 +4,18 @@ block content
 		h1 Genre: #{genre.name}
 
 		div(style='margin-left: 2opx; margin-top: 20px;')
-				h4 Books
+			h4 Books
 
-				dl
-						each book in genreBooks
-								dt 
-										a(href=book.url) #{book.title}
-								dd #{book.summary}
+			dl
+				each book in genreBooks
+					dt 
+						a(href=book.url) #{book.title}
+					dd #{book.summary}
 
-						else
-								p This genre has no books
+				else
+					p This genre has no books
+		hr
+  		p(class="p-8 flex")
+    		a(href=genre.url+'/delete' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Delete Genre
+		p(class="p-8 flex")
+    		a(href=genre.url+'/update' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Update Genre

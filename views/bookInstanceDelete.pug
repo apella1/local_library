@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold") #{title}: 
+  p(class="text-lg m-0") Do you really want to delete this book instance?
+
+  form(method='POST' action='' class="flex flex-col space-y-2")
+      div(class="p-8 m-4")
+        input#bookInstanceId(type='hidden',name='bookInstanceId', required='true', value=bookInstance._id )
+
+      button(type='submit' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Delete Book Instance

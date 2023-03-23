@@ -266,7 +266,7 @@ exports.bookUpdatePost = [
       _id: req.params.id, // * not to assign a new id to the updated book
     });
 
-    if (!errors.isEmpty) {
+    if (!errors.isEmpty()) {
       // querying the db before re-displaying the form
       async.parallel(
         {

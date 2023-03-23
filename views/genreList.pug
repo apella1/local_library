@@ -1,13 +1,13 @@
 extends layout
 
 block content
-		h1= title
+		h1(class="text-4xl font-bold")= title
 		
-		ul
+		ul(class="list-decimal p-8 mt-4")
 				each genre in genreList
 						li
-								a(href=genre.url) #{genre.category}
+								a(href=genre.url class="text-lg text-blue-600 hover:underline") #{genre.category}
 				else
-						li
+						li(class="text-lg")
 								There are no genres specified in the library
 

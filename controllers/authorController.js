@@ -162,11 +162,97 @@ exports.authorDeletePost = (req, res) => {
 };
 
 // display author update form on get
-exports.authorUpdateGet = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author update get");
+exports.authorUpdateGet = (req, res, next) => {
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.params.id).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      // checking for null search results
+      if (results.author == null) {
+        const err = new Error("Author not found");
+        err.status = 404;
+        return next(err);
+      }
+
+      res.render("authorForm", {
+        title: "Update Author",
+        author: results.author,
+      });
+    }
+  );
 };
 
 // handle author update on post
-exports.authorUpdatePost = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author update post");
-};
+exports.authorUpdatePost = [
+  // sanitizing and validating data from db
+  body("firstName", "First name is required")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("lastName", "Last name is required")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+  body("dateOfBirth", "Invalid date of birth")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("dateOfDeath", "Invalid date of death")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+
+  // checking validation results
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const author = new Author({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      dateOfBirth: req.body.dateOfBirth,
+      dateOfDeath: req.body.dateOfDeath,
+      _id: req.params.id,
+    });
+
+    // re-displaying the form if there are errors
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          author(callback) {
+            Author.findById(req.params.id).exec(callback);
+          },
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+          if (results.author == null) {
+            const err = new Error("Author not found");
+            err.status = 404;
+            return next(err);
+          }
+
+          res.render("authorForm", {
+            title: "Update Author",
+            author,
+            errors: errors.array(),
+          });
+        }
+      );
+    }
+
+    // data is valid - update author
+    Author.findByIdAndUpdate(req.params.id, author, {}, (err, theAuthor) => {
+      if (err) {
+        return next(err);
+      }
+      res.redirect(theAuthor.url);
+    });
+  },
+];

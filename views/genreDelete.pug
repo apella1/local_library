@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold") #{title}: #{book.title}
+
+  if genreBooks.length
+
+    p(class="text-lg font-semibold") Delete the following books before attempting to delete this genre.
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4(class="text-2xl text-blue-700") Books
+
+      dl
+      each book in genreBooks
+        dt(class="p-2")
+          a(href=book.url class="text-lg text-blue-500 hover:underline") #{book.title}
+        dd(class="text-md font-normal pl-3") #{book.summary}
+
+  else
+    p(class="text-lg m-0") Do you really want to delete this genre?
+
+    form(method='POST' action='' class="flex flex-col space-y-2")
+      div(class="p-8 m-4")
+        input#genreId.form-control(type='hidden',name='genreId', required='true', value=genre._id )
+
+      button(type='submit' class="bg-blue-700 p-2 rounded-md text-white hover:bg-blue-500 self-center") Delete Genre
