@@ -127,7 +127,7 @@ exports.authorDeleteGet = (req, res, next) => {
 };
 
 // handle author delete on post
-exports.authorDeletePost = (req, res) => {
+exports.authorDeletePost = (req, res, next) => {
   async.parallel(
     {
       author(callback) {

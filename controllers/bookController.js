@@ -311,11 +311,62 @@ exports.bookUpdatePost = [
 ];
 
 // book delete get
-exports.bookDeleteGet = (req, res) => {
-  res.send("Book delete form: not implemented");
+exports.bookDeleteGet = (req, res, next) => {
+  async.parallel(
+    {
+      book(callback) {
+        Book.findById(req.params.id, "title summary").exec(callback);
+      },
+      bookInstances(callback) {
+        BookInstance.find({ book: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.book == null) {
+        res.redirect(`catalog/books`);
+      }
+      res.render("bookDelete", {
+        title: `Delete ${results.book.title}`,
+        book: results.book,
+        bookInstances: results.bookInstances,
+      });
+    }
+  );
 };
 
 // handling book delete
-exports.bookDeletePost = (req, res) => {
-  res.send("Book delete post: not implemented");
+exports.bookDeletePost = (req, res, next) => {
+  async.parallel(
+    {
+      book(callback) {
+        Book.findById(req.params.id, "title summary").exec(callback);
+      },
+      bookInstances(callback) {
+        BookInstance.find({ book: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.bookInstances.length > 0) {
+        res.render("bookDelete", {
+          title: `Delete ${results.book.title}`,
+          book: results.book,
+          bookInstances: results.bookInstances,
+        });
+      }
+      
+      Book.findByIdAndRemove(req.params.id, (err) => {
+        if (err) {
+          return next(err)
+          
+          res.redirect(`catalog/books`)
+        }
+      })
+    }
+  );
 };

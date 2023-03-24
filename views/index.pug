@@ -3,13 +3,11 @@ extends layout
 block content
   h1(class="text-4xl font-bold py-2")= title
 
-  h1(class="text-blue-600 text-2xl") Dynamic content
+  h1(class="text-blue-600 text-2xl") Library Records
 
   if error
     p(class="text-lg text-red-800") Error getting dynamic content.
   else
-    p(class="text-lg font-medium") The library has the following record counts:
-
     ul(class="list-decimal p-8")
       li #[strong Books:] !{data.bookCount}
       li #[strong Copies:] !{data.bookInstanceCount}
