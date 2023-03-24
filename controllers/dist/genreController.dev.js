@@ -167,9 +167,53 @@ function (req, res, next) {
   });
 }]; // genre delete get
 
-exports.genreDeleteGet = function (req, res) {}; // handling genre delete
+exports.genreDeleteGet = function (req, res, next) {
+  async.parallel({
+    genre: function genre(callback) {
+      Genre.findById(req.params.id).exec(callback);
+    },
+    genreBooks: function genreBooks(callback) {
+      Book.find({
+        genre: req.params.id
+      }).exec(callback);
+    }
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    res.render("genreDelete", {
+      title: "Delete: ".concat(results.genre.category),
+      genre: results.genre,
+      genreBooks: results.genreBooks
+    });
+  });
+}; // handling genre delete
 
 
 exports.genreDeletePost = function (req, res) {
-  res.send("genre delete post: not implemented");
+  async.parallel({
+    genre: function genre(callback) {
+      Genre.findById(req.params.id).exec(callback);
+    },
+    genreBooks: function genreBooks(callback) {
+      Book.find({
+        genre: req.params.id
+      }).exec(callback);
+    }
+  }, function (err, results) {
+    if (err) {
+      return next(err);
+    }
+
+    if (results.genre == null) {
+      res.redirect("catalog/genres");
+    }
+
+    if (results.genreBooks.length > 0) {
+      res.render("genreDelete", {
+        title: "Delete: ".concat(results.genre.category)
+      });
+    }
+  });
 };

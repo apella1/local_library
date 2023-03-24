@@ -134,7 +134,7 @@ exports.authorDeletePost = (req, res, next) => {
         Author.findById(req.params.authorId).exec(callback);
       },
       authorBooks(callback) {
-        Book.find({ author: req.params.authorId });
+        Book.find({ author: req.params.authorId }).exec(callback);
       },
     },
     (err, results) => {

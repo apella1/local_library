@@ -98,14 +98,64 @@ exports.bookInstanceCreatePost = [
 ];
 
 // display book instance update get
-exports.bookInstanceUpdateGet = (req, res) => {
-  res.send("Book instance update get: not implemented");
+exports.bookInstanceUpdateGet = (req, res, next) => {
+  BookInstance.findById(req.params.id).exec((err, result) => {
+    if (err) {
+      return next(err);
+    }
+    res.render("bookInstanceForm", {
+      title: `Update Book Instance`,
+      bookInstance: result,
+    });
+  });
 };
 
 // handle book instance update post
-exports.bookInstanceUpdatePost = (req, res) => {
-  res.send("Book instance update post: not implemented");
-};
+exports.bookInstanceUpdatePost = [
+  body("book", "Book is required").trim().isLength({ min: 3 }).escape(),
+  body("imprint", "Imprint is required").trim().isLength({ min: 3 }).escape(),
+  body("status", "Status is required").escape(),
+  body("dueBack", "Invalid date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const bookInstance = new BookInstance({
+      book: req.body.book,
+      imprint: req.body,
+      imprint,
+      status: req.body.status,
+      dueBack: req.body.dueBack,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      BookInstance.findById(req.params.id).exec((err, result) => {
+        if (err) {
+          return next(err);
+        }
+        res.render("bookInstanceForm", {
+          title: `Update Book Instance`,
+          bookInstance,
+          errors: errors.array(),
+        });
+      });
+    }
+
+    BookInstance.findByIdAndUpdate(
+      req.params.id,
+      bookInstance,
+      (err, theBookInstance) => {
+        if (err) {
+          return next(err);
+        }
+        res.redirect(theBookInstance.url);
+      }
+    );
+  },
+];
 
 // book instance delete get
 exports.bookInstanceDeleteGet = (req, res) => {

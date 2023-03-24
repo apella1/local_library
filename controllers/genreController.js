@@ -145,25 +145,76 @@ exports.genreUpdatePost = [
         res.render("genreForm", {
           title: `Update: ${result.category}`,
           genre,
-          errors: errors.array()
-        })
+          errors: errors.array(),
+        });
       });
     }
-    
+
     Genre.findByIdAndUpdate(req.params.id, genre, {}, (err, theGenre) => {
       if (err) {
-        return next(err)
+        return next(err);
       }
-      res.redirect(theGenre.url)
-    })
+      res.redirect(theGenre.url);
+    });
   },
 ];
 // genre delete get
-exports.genreDeleteGet = (req, res) => {
-
+exports.genreDeleteGet = (req, res, next) => {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.params.id).exec(callback);
+      },
+      genreBooks(callback) {
+        Book.find({ genre: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.render("genreDelete", {
+        title: `Delete: ${results.genre.category}`,
+        genre: results.genre,
+        genreBooks: results.genreBooks,
+      });
+    }
+  );
 };
 
 // handling genre delete
-exports.genreDeletePost = (req, res) => {
-  res.send("genre delete post: not implemented");
+exports.genreDeletePost = (req, res, next) => {
+  async.parallel(
+    {
+      genre(callback) {
+        Genre.findById(req.params.id).exec(callback);
+      },
+      genreBooks(callback) {
+        Book.find({ genre: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.genre == null) {
+        res.redirect(`catalog/genres`);
+      }
+      if (results.genreBooks.length > 0) {
+        res.render("genreDelete", {
+          title: `Delete: ${results.genre.category}`,
+          genre: results.genre,
+          genreBooks: results.genreBooks,
+        });
+      }
+
+      Genre.findByIdAndRemove(req.params.id, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect(`catalog/genres`);
+      });
+    }
+  );
 };

@@ -359,14 +359,14 @@ exports.bookDeletePost = (req, res, next) => {
           bookInstances: results.bookInstances,
         });
       }
-      
+
       Book.findByIdAndRemove(req.params.id, (err) => {
         if (err) {
-          return next(err)
-          
-          res.redirect(`catalog/books`)
+          return next(err);
+
+          res.redirect(`catalog/books`);
         }
-      })
+      });
     }
   );
 };
