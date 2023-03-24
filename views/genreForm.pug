@@ -5,8 +5,8 @@ block content
 
   form(method='POST' action='' class="flex flex-col p-8 m-4 space-y-4")
     div(class="flex space-x-4 items-center")
-      label(for='name' class="text-xl font-medium") Genre:
-      input(type='text' class="p-2 rounded-md border w-full border-gray-700" id="name" placeholder='Fantasy, Poetry etc.' name='category' value=(undefined===genre ? '' : genre.category))
+      label(for='category' class="text-xl font-medium") Genre:
+      input(type='text' class="p-2 rounded-md border w-full border-gray-700" id="category" placeholder='Fantasy, Poetry etc.' name='category' value=(undefined===genre ? '' : genre.category))
     button(type='submit' class="text-white bg-blue-800 px-2 py-4 rounded-md hover:bg-blue-500") Submit
 
   if errors
