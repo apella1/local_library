@@ -21,7 +21,7 @@ var catalogRouter = require("./routes/catalog");
 var app = express(); // connecting to mongodb
 
 var devDbUrl = "mongodb+srv://Koda:jhavp5XvfYNtm7uF@cluster0.jaxhkop.mongodb.net/local_library?retryWrites=true&w=majority";
-var mongoDB = process.env.MONGO_URI || devDbUrl;
+var mongoDB = process.env.MONGO_URL || devDbUrl;
 mongoose.set("strictQuery", false);
 main()["catch"](function (err) {
   return console.log(err);
