@@ -13,8 +13,10 @@ const app = express();
 
 // connecting to mongodb
 
-const mongoDB =
+const devDbUrl =
   "mongodb+srv://Koda:jhavp5XvfYNtm7uF@cluster0.jaxhkop.mongodb.net/local_library?retryWrites=true&w=majority";
+
+const mongoDB = process.env.MONGO_URI || devDbUrl;
 
 mongoose.set("strictQuery", false);
 main().catch((err) => console.log(err));

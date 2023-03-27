@@ -157,12 +157,34 @@ exports.bookInstanceUpdatePost = [
   },
 ];
 
-// book instance delete get
-exports.bookInstanceDeleteGet = (req, res) => {
-  res.send("Book instance delete form: not implemented");
+// display book instance delete get.
+exports.bookInstanceDeleteGet = (req, res, next) => {
+  BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec(function (err, bookInstance) {
+      if (err) {
+        return next(err);
+      }
+      if (bookInstance == null) {
+        // No results.
+        res.redirect("/catalog/bookInstances");
+      }
+      // Successful, so render.
+      res.render("bookInstanceDelete", {
+        title: "Delete BookInstance",
+        bookInstance: bookInstance,
+      });
+    });
 };
 
-// handling book instance delete
-exports.bookDeletePost = (req, res) => {
-  res.send("Book instance delete post: not implemented");
+// handle BookInstance delete on post
+exports.bookInstanceDeletePost = (req, res, next) => {
+  // Assume valid BookInstance id in field.
+  BookInstance.findByIdAndRemove(req.body.id, function deleteBookInstance(err) {
+    if (err) {
+      return next(err);
+    }
+    // Success, so redirect to list of BookInstance items.
+    res.redirect("/catalog/bookinstances");
+  });
 };
