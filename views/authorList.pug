@@ -1,14 +1,12 @@
 extends layout
 
 block content
-		h1(class="text-4xl font-bold")= title
-		
+	h1(class="text-4xl font-bold")= title
 		ul(class="list-decimal p-8 mt-4")
-				each author in authorList
-						li
-								a(href=author.url class="text-lg text-blue-600 hover:underline") #{author.name}
-								| (#{author.dobFormatted} - #{author.dodFormatted})
-
-				else
-						li(class="text-lg")
-								There are no author records
+			each author in authorList
+				li
+					a(href=author.url class="text-lg text-blue-600 hover:underline") #{author.name}
+					| (#{author.dobFormatted} - #{author.dodFormatted})
+			else
+				li(class="text-lg") There are no author records
+								
