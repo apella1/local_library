@@ -501,11 +501,23 @@ video {
 .hidden {
   display: none;
 }
+.h-2 {
+  height: 0.5rem;
+}
+.h-4 {
+  height: 1rem;
+}
 .min-h-screen {
   min-height: 100vh;
 }
 .w-full {
   width: 100%;
+}
+.w-8 {
+  width: 2rem;
+}
+.w-12 {
+  width: 3rem;
 }
 .flex-1 {
   flex: 1 1 0%;
