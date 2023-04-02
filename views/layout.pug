@@ -6,32 +6,32 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div(class='container p-8')
-      div(class='grid grid-cols-2 gap-1')
+    div(class='min-h-screen bg-[#0F172A] text-white')
+      div(class='grid grid-cols-2 gap-1 p-4')
         div(class='')
           block sidebar
             ul(class='m-4 space-y-2')
               li
-                a(href='/catalog' class="text-blue-600 hover:underline") Home
+                a(href='/' class="text-[#C0CDD5] hover:underline") Home
               li
-                a(href='/catalog/books' class="text-blue-600 hover:underline") All books
+                a(href='/books' class="text-[#C0CDD5] hover:underline") Books
               li
-                a(href='/catalog/authors' class="text-blue-600 hover:underline") All authors
+                a(href='/authors' class="text-[#C0CDD5] hover:underline") Authors
               li
-                a(href='/catalog/genres' class="text-blue-600 hover:underline") All genres
+                a(href='/genres' class="text-[#C0CDD5] hover:underline") Genres
               li
-                a(href='/catalog/bookInstances' class="text-blue-600 hover:underline") All book-instances
+                a(href='/bookInstances' class="text-[#C0CDD5] hover:underline") Book Instances
               li
                 hr(class="font-black text-black")
               li
-                a(href='/catalog/author/create' class="text-blue-600 hover:underline") Create new author
+                a(href='/author/create' class="text-[#C0CDD5] hover:underline") Add Author
               li
-                a(href='/catalog/genre/create' class="text-blue-600 hover:underline") Create new genre
+                a(href='/genre/create' class="text-[#C0CDD5] hover:underline") Add Genre
               li
-                a(href='/catalog/book/create' class="text-blue-600 hover:underline") Create new book
+                a(href='/book/create' class="text-[#C0CDD5] hover:underline") Add Book
               li
-                a(href='/catalog/bookInstance/create' class="text-blue-600 hover:underline") Create new book instance (copy)
+                a(href='/bookInstance/create' class="text-[#C0CDD5] hover:underline") Add Book Instance
 
-        div(class='')
+        div(class='mt-4')
           block content
 

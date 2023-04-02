@@ -17,7 +17,7 @@ const BookInstanceSchema = new Schema({
 
 // virtual field for book instance url
 BookInstanceSchema.virtual("url").get(function () {
-  return `catalog/bookInstance/${this._id}`;
+  return `bookInstance/${this._id}`;
 });
 
 // virtual field for formatted date

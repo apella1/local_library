@@ -6,10 +6,10 @@ block content
   form(method='POST' action='' class="flex flex-col p-8 m-4 space-y-4")
     div(class="flex p-4 space-x-2")
       label(for='title' class="text-xl font-medium") Title:
-      input(type='text' class="border border-gray-700 rounded-md p-2 w-full" id="title" placeholder='Name of book' name='title' required='true' value=(undefined===book ? '' : book.title) )
+      input(type='text' class="border border-gray-700 rounded-md p-2 w-full text-black" id="title" placeholder='Name of book' name='title' required='true' value=(undefined===book ? '' : book.title) )
     div(class="flex p-4 space-x-2")
       label(for='author' class="text-xl font-medium") Author:
-      select(type='select' class="border border-gray-700 rounded-md p-2 w-full" id="author" placeholder='Select author' name='author' required='true' ) - authors.sort(function(a, b) {let textA = a.family_name.toUpperCase(); let textB = b.family_name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+      select(type='select' class="border border-gray-700 rounded-md p-2 w-full text-black" id="author" placeholder='Select author' name='author' required='true' ) - authors.sort(function(a, b) {let textA = a.family_name.toUpperCase(); let textB = b.family_name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
         for author in authors
           if book
             option(value=author._id selected=(author._id.toString()===book.author._id.toString() ? 'selected' : false) ) #{author.name}
@@ -17,16 +17,16 @@ block content
             option(value=author._id) #{author.name}
     div(class="flex p-4 space-x-2")
       label(for='summary' class="text-xl font-medium") Summary:
-      textarea(type='textarea' id="summary" placeholder='Summary' class="border w-full border-gray-700 rounded-md p-2" name='summary' required='true') #{undefined===book ? '' : book.summary}
+      textarea(type='textarea' id="summary" placeholder='Summary' class="border w-full text-black border-gray-700 rounded-md p-2" name='summary' required='true') #{undefined===book ? '' : book.summary}
     div(class="flex p-4 space-x-2")
       label(for='isbn' class="text-xl font-medium") ISBN:
-      input(type='text' id="isbn" placeholder='ISBN13' class="border border-gray-700 w-full rounded-md p-2" name='isbn' value=(undefined===book ? '' : book.isbn) required='true')
+      input(type='text' id="isbn" placeholder='ISBN13' class="border border-gray-700 w-full rounded-md text-black p-2" name='isbn' value=(undefined===book ? '' : book.isbn) required='true')
     div(class="flex p-4 space-x-2")
       label(class="text-xl font-medium") Genre:
       div
         for genre in genres
           div(class='inline pr-3')
-            input(type='checkbox', class="border border-gray-700 rounded-md p-2 w-full" name='genre', id=genre._id, value=genre._id, checked=genre.checked)
+            input(type='checkbox', class="border text-black border-gray-700 rounded-md p-2 w-full" name='genre', id=genre._id, value=genre._id, checked=genre.checked)
             label(for=genre._id class="text-xl font-medium") #{genre.name}
     button(type='submit' class="text-white bg-blue-800 px-2 py-4 rounded-lg hover:bg-blue-500") Submit
 

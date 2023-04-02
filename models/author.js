@@ -35,7 +35,7 @@ AuthorSchema.virtual("name").get(function () {
 // virtual fields are not persisted in the database
 
 AuthorSchema.virtual("url").get(function () {
-  return `catalog/author/${this._id}`;
+  return `author/${this._id}`;
 });
 
 // virtual field for formatted dates

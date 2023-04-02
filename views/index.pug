@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  h1(class="text-4xl font-bold py-2")= title
+  h1(class="text-4xl font-bold py-2") Home
 
   h1(class="text-blue-600 text-2xl") Library Records
 
@@ -11,7 +11,7 @@ block content
     ul(class="list-decimal p-8")
       li #[strong Books:] !{data.bookCount}
       li #[strong Copies:] !{data.bookInstanceCount}
-      li #[strong Copies available:] !{data.bookInstanceAvailableCount}
+      li #[strong Copies Available:] !{data.bookInstanceAvailableCount}
       li #[strong Authors:] !{data.authorCount}
       li #[strong Genres:] !{data.genreCount}
 

@@ -14,7 +14,7 @@ const BookSchema = new Schema({
 // todo binding of this keyword in function definitions vs arrow functions
 
 BookSchema.virtual("url").get(function () {
-  return `catalog/book/${this._id}`;
+  return `book/${this._id}`;
 });
 
 module.exports = mongoose.model("Book", BookSchema);

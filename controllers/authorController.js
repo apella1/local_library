@@ -115,7 +115,7 @@ exports.authorDeleteGet = (req, res, next) => {
         return next(err);
       }
       if (results.author == null) {
-        res.redirect(`/catalog/authors`);
+        res.redirect(`authors`);
       }
       res.render("authorDeleteForm", {
         title: "Delete Author",
@@ -155,7 +155,7 @@ exports.authorDeletePost = (req, res, next) => {
           return next(err);
         }
 
-        res.redirect(`catalog/authors`);
+        res.redirect(`authors`);
       });
     }
   );

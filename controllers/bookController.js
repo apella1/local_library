@@ -26,6 +26,7 @@ exports.index = (req, res) => {
         Genre.countDocuments({}, callback);
       },
     },
+    // callback function passed in the async module
     (err, results) => {
       res.render("index", {
         title: "Local Library Home",
@@ -60,7 +61,7 @@ exports.bookDetail = (req, res, next) => {
           .exec(callback);
       },
       bookInstance(callback) {
-        BookInstance.find({ book: req.params.id });
+        BookInstance.find({ book: req.params.id }).exec(callback);
       },
     },
     function (err, results) {
@@ -108,7 +109,7 @@ exports.bookCreateGet = (req, res, next) => {
 // handling book creation post
 exports.bookCreatePost = [
   // converting the genre into an array
-  (req, res, next) => {
+  (req, _res, next) => {
     if (!Array.isArray(req.body.genre)) {
       req.body.genre =
         typeof req.body.genre === undefined ? [] : [req.body.genre];
@@ -326,7 +327,7 @@ exports.bookDeleteGet = (req, res, next) => {
         return next(err);
       }
       if (results.book == null) {
-        res.redirect(`catalog/books`);
+        res.redirect(`books`);
       }
       res.render("bookDelete", {
         title: `Delete ${results.book.title}`,
@@ -364,7 +365,7 @@ exports.bookDeletePost = (req, res, next) => {
         if (err) {
           return next(err);
 
-          res.redirect(`catalog/books`);
+          res.redirect(`books`);
         }
       });
     }

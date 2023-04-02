@@ -51,7 +51,7 @@ exports.genreDetail = (req, res, next) => {
 };
 
 // display genre create form
-exports.genreCreateGet = (req, res, next) => {
+exports.genreCreateGet = (_req, res, _next) => {
   res.render("genreForm", { title: "Create Genre" });
 };
 
@@ -140,7 +140,7 @@ exports.genreUpdatePost = [
           return next(er);
         }
         if (result == null) {
-          res.redirect(`catalog/genres`);
+          res.redirect(`genres`);
         }
         res.render("genreForm", {
           title: `Update: ${result.category}`,
@@ -198,7 +198,7 @@ exports.genreDeletePost = (req, res, next) => {
         return next(err);
       }
       if (results.genre == null) {
-        res.redirect(`catalog/genres`);
+        res.redirect(`genres`);
       }
       if (results.genreBooks.length > 0) {
         res.render("genreDelete", {
@@ -213,7 +213,7 @@ exports.genreDeletePost = (req, res, next) => {
           return next(err);
         }
 
-        res.redirect(`catalog/genres`);
+        res.redirect(`genres`);
       });
     }
   );
